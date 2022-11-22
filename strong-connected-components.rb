@@ -37,30 +37,30 @@ def strongly_connected_components()
     end
     p "v #{@visited.length}"
   end
-  @visited = []
-  while !@stack.empty?
-    @results = []
-    if !@visited.include?(@stack[-1])
-      rdfs(@stack[-1])
-    end
-    @sccs << @results.length
-    @stack.pop
-    p "s #{@stack.length}"
-  end
+  # @visited = []
+  # while !@stack.empty?
+  #   @results = []
+  #   if !@visited.include?(@stack[-1])
+  #     rdfs(@stack[-1])
+  #   end
+  #   @sccs << @results.length
+  #   @stack.pop
+  #   p "s #{@stack.length}"
+  # end
 end
 
 def dfs(node)
-    # binding.pry
+# binding.pry
   @visited << node
-  @results << node
-  begin
-    for value in @graphHash[node]
-      if !@visited.include?(value)
-        dfs(value, data)
-      end
+  # @results << node
+  if @graphHash[node].nil?
+    @stack << node
+    return
+  end
+  for value in @graphHash[node]
+    if !@visited.include?(value)
+      dfs(value)
     end
-  rescue
-    node
   end
   @stack << node
 end
@@ -82,4 +82,13 @@ end
 #
 
 strongly_connected_components()
-p @sccs.sort
+
+old_stdout = $stdout
+File.open('scc-results.txt', 'w') do |fo|
+  $stdout = fo
+
+  p @visited
+  p @stack
+
+end
+$stdout = old_stdout
